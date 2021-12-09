@@ -3,6 +3,7 @@ import argparse
 import imutils
 import cv2
 import sys
+import time
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -52,13 +53,17 @@ if ARUCO_DICT.get(args["type"], None) is None:
 # load the ArUCo dictionary, grab the ArUCo parameters, and detect
 # the markers
 print("[INFO] detecting '{}' tags...".format(args["type"]))
+start = time.time()
 arucoDict = cv2.aruco.Dictionary_get(ARUCO_DICT[args["type"]])
 arucoParams = cv2.aruco.DetectorParameters_create()
 (corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict,
 	parameters=arucoParams)
 
+end = time.time()
+print("DETECTION TIME: "+str(end-start)+"s")
 
 # verify *at least* one ArUco marker was detected
+print(corners)
 if len(corners) > 0:
 	# flatten the ArUco IDs list
 	ids = ids.flatten()
