@@ -6,24 +6,36 @@ import numpy as np
 #x_t: [x,z,theta]
 #W: [x,z,theta]
 
-def predict_measurement(x_t, W, j):
-    z_t = np.zeros(6,1)
-    x, z, th = x_t
 
-    t = np.array([x, 0, z]).T # [x 0 z]
-
-    R = np.array([[np.cos(th), 0, np.sin(th)],[0, 1, 0],[-np.sin(th), 0, np.cos(th)]])
-
-    T_g_to_cam = np.concatenate((R,t), axis=0)
-    T_g_to_cam = np.concatenate((T_g_to_cam,np.array([0, 0, 0, 1])), axis=1)
+def euler2rot(angles):
+    a, b, g = angles
 
 
+    R_z = np.array([[np.cos(a), -np.sin(a), 0],[np.sin(a), np.cos(a), 0],[0, 0, 1]]) # Alpha rotation
+    R_y = np.array([[np.cos(b), 0, np.sin(b)],[0, 1, 0],[-np.sin(b), 0, np.cos(b)]]) # Beta rotation
+    R_x = np.array([[1, 0, 0],[0, np.cos(g), -np.sin(g)],[0, np.sin(g), np.cos(g)]]) # Gamma rotation
 
-    '''
-    z_t = np.zeros(3,1)
-    x_axisx = x_t[0]
-    x_axis_y = x_t[1]
-    z_t[0] = sqrt((W[j][x_axisx] - x_axisx)**2 + (W[j][x_axis_y] - x_axis_y)**2)
-    z_t[1] = atan2(W[j][x_axis_y]- x_axis_y, W[j][x_axisx]- x_axisx)
-    return z_t
-    '''
+    return np.dot(R_z, R_y).dot(R_x)
+
+def transform_mat(R, t):
+
+    T = np.concatenate((R,t), axis=0)
+    T = np.concatenate((T,np.array([0, 0, 0, 1])), axis=1)
+    return T
+
+
+def h(x_t, W, j):
+
+    x, y, z, alpha, beta, gamma = x_t
+
+    R_GC = euler2rot(alpha, beta, gamma)
+    T_GC = transform_mat(R_GC, np.array(x, y, z))
+
+    W_x, W_y, W_z, W_alpha, W_beta, W_gamma = W[j]
+
+    R_GM = euler2rot(W_alpha, W_beta, W_gamma)
+    T_GM = transform_mat(R_GM, np.array(W_x, W_y, W_z))
+
+    T_CM = np.dot(np.linalg.inv(T_GC), T_GM) 
+    return T_CM
+
