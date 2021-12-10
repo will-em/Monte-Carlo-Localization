@@ -4,6 +4,8 @@ import numpy as np
 # print("measurement model")
 
 #x_t: [x,z,theta]
+#W: [x,z,theta]
+
 def predict_measurement(x_t, W, j):
     z_t = np.zeros(6,1)
     x, z, th = x_t
@@ -14,7 +16,8 @@ def predict_measurement(x_t, W, j):
 
     T_g_to_cam = np.concatenate((R,t), axis=0)
     T_g_to_cam = np.concatenate((T_g_to_cam,np.array([0, 0, 0, 1])), axis=1)
-    
+
+
 
     '''
     z_t = np.zeros(3,1)
