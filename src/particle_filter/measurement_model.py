@@ -19,8 +19,10 @@ def euler2rot(angles):
 
 def transform_mat(R, t):
 
-    T = np.concatenate((R,t), axis=0)
-    T = np.concatenate((T,np.array([0, 0, 0, 1])), axis=1)
+    T = np.concatenate((R,t), axis=1)
+    #print(T.shape)
+    #print(np.array([[0, 0, 0, 1]]).shape)
+    T = np.concatenate((T,np.array([[0, 0, 0, 1]])), axis=0)
     return T
 
 
@@ -28,14 +30,28 @@ def h(x_t, W, j):
 
     x, y, z, alpha, beta, gamma = x_t
 
-    R_GC = euler2rot(alpha, beta, gamma)
-    T_GC = transform_mat(R_GC, np.array(x, y, z))
+    R_GC = euler2rot((alpha, beta, gamma))
+    '''
+    t = np.zeros((3, 1))
+    t[0] = x
+    t[1] = y
+    t[2] = z
+    '''
+    T_GC = transform_mat(R_GC, np.array([[x, y, z]]).T) #NEGATE
 
     W_x, W_y, W_z, W_alpha, W_beta, W_gamma = W[j]
 
-    R_GM = euler2rot(W_alpha, W_beta, W_gamma)
-    T_GM = transform_mat(R_GM, np.array(W_x, W_y, W_z))
+    R_GM = euler2rot((W_alpha, W_beta, W_gamma))
+    T_GM = transform_mat(R_GM, np.array([[W_x, W_y, W_z]]).T)
 
     T_CM = np.dot(np.linalg.inv(T_GC), T_GM) 
+    #T_CM = np.dot(T_GC, T_GM)
     return T_CM
 
+if __name__ == "__main__":
+    np.set_printoptions(suppress=True)
+    #x_test = np.array([0, 0, 0.5, 0, np.pi, 20/360 * 2 * np.pi])
+    #x_test = np.array([0, 0, 0.5, 0, , 20/360 * 2 * np.pi])
+    x_test = np.array([2, 0, 0.5, 0, np.pi, 0])
+    W = np.array([(0, 0, 4, np.pi, 0, 0)])
+    print(h(x_test, W, 0))
