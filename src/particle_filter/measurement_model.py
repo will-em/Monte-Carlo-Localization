@@ -43,7 +43,10 @@ def h(x_t, W, j):
 
     R_GM = euler2rot((W_alpha, W_beta, W_gamma))
     T_GM = transform_mat(R_GM, np.array([[W_x, W_y, W_z]]).T)
-
+    #print(T_GC)
+    print(np.dot(np.linalg.inv(T_GC), np.array([[2, 0, 1, 1]]).T))
+    #print(np.linalg.inv(T_GC))
+    #print(T_GM)
     T_CM = np.dot(np.linalg.inv(T_GC), T_GM) 
     #T_CM = np.dot(T_GC, T_GM)
     return T_CM
@@ -52,6 +55,9 @@ if __name__ == "__main__":
     np.set_printoptions(suppress=True)
     #x_test = np.array([0, 0, 0.5, 0, np.pi, 20/360 * 2 * np.pi])
     #x_test = np.array([0, 0, 0.5, 0, , 20/360 * 2 * np.pi])
-    x_test = np.array([2, 0, 0.5, 0, np.pi, 0])
-    W = np.array([(0, 0, 4, np.pi, 0, 0)])
+    #x_test = np.array([2, 0, 0.5, np.pi, 45/360 * 2 * np.pi, 0])
+    x_test = np.array([2, 0, 0.5, np.pi, 45/360 * 2 * np.pi, -20/360 * 2 * np.pi])
+
+    #x_test = np.array([0, 0, 0.5, np.pi, 0, -20/360 * 2 * np.pi])
+    W = np.array([(0, 0, 4, 0, np.pi, 0)]) #MULTIPLY BY R
     print(h(x_test, W, 0))
