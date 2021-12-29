@@ -25,7 +25,16 @@ class particle_filter:
 
         Psi = data_association(self.particles, self.map, obv, self.Q) # num_obs x num_of_particles
         weights = np.prod(Psi, axis=0)
-        pass
+
+        CDF = np.cumsum(weights)
+
+        r_0 = 1 / self.M * np.random.rand()
+
+        for m in range(self.M):
+            i = np.where(CDF >= r_0 + (m-1)/self.M, np.inf).argmin()
+            updated_particles[:, m] = self.particles[:, i]
+
+        self.particles = updated_particles 
 
 
     def plot():
