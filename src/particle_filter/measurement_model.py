@@ -49,7 +49,8 @@ def h(x_t, W, j):
     #print(T_GM)
     T_CM = np.dot(np.linalg.inv(T_GC), T_GM) 
     #T_CM = np.dot(T_GC, T_GM)
-    return T_CM
+
+    return np.matrix.flatten(T_CM[:-1, :])
 
 if __name__ == "__main__":
     np.set_printoptions(suppress=True)
