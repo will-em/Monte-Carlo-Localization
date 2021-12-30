@@ -38,6 +38,17 @@ while video.isOpened():
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 '''
+
+def test_image():
+    image = 'double_marker.png'
+    #image = 'left.png'
+    img = cv2.imread(image)
+    mtx, dist, markerLength, arucoParams, arucoDict = aruco_params()
+    z = aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict)
+    #cv2.imshow('Image', img) #REMOVE COMMENT TO SHOW IMAGE
+    #cv2.waitKey(0)
+    return z
+
 def read_image(img):
     #image = 'double_marker.png'
     #image = 'left.png'

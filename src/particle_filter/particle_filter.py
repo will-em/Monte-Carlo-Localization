@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 
 class Particle_filter:
 
-    def __init__(self, num_of_particles, landmarks, Q, boundaries):
+    def __init__(self, num_of_particles, landmarks, Q, boundaries, random_ratio):
         self.num_of_particles = num_of_particles
         self.M = landmarks.shape[1]
         self.Q = Q
         self.map = landmarks               # x, y, z, yaw, pitch, roll
         self.boundaries = boundaries# [x_start, x_end, z_start, z_end]
         self.particles = np.zeros((6, self.num_of_particles))
+        self.random_ratio = random_ratio
 
         self.particles[0, :] = np.random.randint(self.boundaries[0], high=self.boundaries[1], size= num_of_particles) # x-row
         self.particles[2, :] = np.random.randint(self.boundaries[2], high=self.boundaries[3], size= num_of_particles) # z-row
@@ -37,9 +38,8 @@ class Particle_filter:
             updated_particles[:, m] = self.particles[:, i]
 
         #RANDOMNESS
-        num_of_random = 0.1 * self.M
-
-        indices = np.random.randint(0, high=self.M-1, size=num_of_random) #Unique??
+        num_of_random = int(self.random_ratio * self.num_of_particles)
+        indices = np.random.randint(0, high=(self.num_of_particles - 1), size=num_of_random) #Unique??
 
         for i in indices:
             updated_particles[0, i] = np.random.randint(self.boundaries[0], high=self.boundaries[1]) # x-row
@@ -57,7 +57,7 @@ class Particle_filter:
         Z = self.particles[2, :]
         plt.scatter(X, Z)
         plt.show()
-        print(self.particles)
+        #print(self.particles)
 
 
 
