@@ -44,7 +44,7 @@ def h(x_t, W, j):
     R_GM = euler2rot((W_alpha, W_beta, W_gamma))
     T_GM = transform_mat(R_GM, np.array([[W_x, W_y, W_z]]).T)
     #print(T_GC)
-    print(np.dot(np.linalg.inv(T_GC), np.array([[2, 0, 1, 1]]).T))
+    #print(np.dot(np.linalg.inv(T_GC), np.array([[2, 0, 1, 1]]).T))
     #print(np.linalg.inv(T_GC))
     #print(T_GM)
     T_CM = np.dot(np.linalg.inv(T_GC), T_GM)

@@ -15,7 +15,7 @@ W = np.concatenate((W_1.T, W_2.T), axis=1)
 
 x_test = np.array([[-0.5, 0, -0.5, np.pi, -45/360 * 2 * np.pi, 0/360 * 2 * np.pi]]).T
 
-print(x_test.shape)
+#print(x_test.shape)
 Q = np.eye(12)
 Psi = data_association(x_test, W, z, Q)
 print('Psi = ' + str(Psi))
