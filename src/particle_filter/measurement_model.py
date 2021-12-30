@@ -39,7 +39,7 @@ def h(x_t, W, j):
     '''
     T_GC = transform_mat(R_GC, np.array([[x, y, z]]).T) #NEGATE
 
-    W_x, W_y, W_z, W_alpha, W_beta, W_gamma = W[j]
+    W_x, W_y, W_z, W_alpha, W_beta, W_gamma = W[:,j]
 
     R_GM = euler2rot((W_alpha, W_beta, W_gamma))
     T_GM = transform_mat(R_GM, np.array([[W_x, W_y, W_z]]).T)
@@ -47,7 +47,7 @@ def h(x_t, W, j):
     print(np.dot(np.linalg.inv(T_GC), np.array([[2, 0, 1, 1]]).T))
     #print(np.linalg.inv(T_GC))
     #print(T_GM)
-    T_CM = np.dot(np.linalg.inv(T_GC), T_GM) 
+    T_CM = np.dot(np.linalg.inv(T_GC), T_GM)
     #T_CM = np.dot(T_GC, T_GM)
 
     return np.matrix.flatten(T_CM[:-1, :])
