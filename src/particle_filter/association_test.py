@@ -9,7 +9,7 @@ z = read_image()
 
 
 W_1 = np.array([(0, 0, 4, 0, np.pi, 0)]) #Right marker (double_marker.png)
-W_2 = np.array([(4, 0, 0, 0, np.pi/2, 0)]) #Left marker (double_marker.png)
+W_2 = np.array([(4, 0, 0, 0, -np.pi/2, 0)]) #Left marker (double_marker.png)
 W = np.concatenate((W_1.T, W_2.T), axis=1)
 #print(W)
 
