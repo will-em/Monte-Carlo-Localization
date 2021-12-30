@@ -88,7 +88,7 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
 
 
         rvec_test, _ = cv2.Rodrigues(result[:, :-1])
-        tvec_test = result[:, 2]
+        tvec_test = result[:, 3]
         
         cv2.aruco.drawAxis(img, mtx, dist, rvec_test, tvec_test, 1.0)
 
