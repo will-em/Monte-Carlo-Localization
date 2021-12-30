@@ -38,14 +38,14 @@ while video.isOpened():
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 '''
-def read_image():
-    image = 'double_marker.png'
+def read_image(img):
+    #image = 'double_marker.png'
     #image = 'left.png'
-    img = cv2.imread(image)
+    #img = cv2.imread(image)
     mtx, dist, markerLength, arucoParams, arucoDict = aruco_params()
     z = aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict)
-    cv2.imshow('Image', img) #REMOVE COMMENT TO SHOW IMAGE
-    cv2.waitKey(0)
+    #cv2.imshow('Image', img) #REMOVE COMMENT TO SHOW IMAGE
+    #cv2.waitKey(0)
     return z
 
 
@@ -81,7 +81,7 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
         #print(W)
 
         x_test = np.array([[-0.5, 0, -0.5, np.pi, -45/360 * 2 * np.pi, 0/360 * 2 * np.pi]]).T
-        
+
         result = h(x_test[:, 0], W, 0)
 
         result = result.reshape((3,4))
@@ -89,7 +89,7 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
 
         rvec_test, _ = cv2.Rodrigues(result[:, :-1])
         tvec_test = result[:, 3]
-        
+
         cv2.aruco.drawAxis(img, mtx, dist, rvec_test, tvec_test, 1.0)
 
 

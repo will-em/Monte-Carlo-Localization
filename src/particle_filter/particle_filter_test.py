@@ -1,6 +1,7 @@
 from Particle_filter import Particle_filter
 from aruco_detect import read_image
 import numpy as np
+import cv2
 
 if __name__=="__main__":
     W_1 = np.array([(0, 0, 4, 0, np.pi, 0)]) #right marker (double_marker.png)
@@ -12,10 +13,16 @@ if __name__=="__main__":
     boundaries = [x_start, x_end, z_start, z_end]
     #for i in range(10)
     PF = Particle_filter(500, W, Q, boundaries)
-    z_t = read_image()
     PF.plot()
-    PF.step(z_t)
-    PF.plot()
-    
 
-    
+    video = cv2.VideoCapture('video_test.mov')
+
+    while video.isOpened():
+        ret, img = video.read()
+
+        if ret is False:
+            break
+
+        z_t = read_image(img)
+        PF.step(z_t)
+        PF.plot()
