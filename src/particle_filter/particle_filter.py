@@ -21,6 +21,7 @@ class Particle_filter:
         self.particles[5, :] = np.pi * np.random.rand(num_of_particles) - np.pi/2 # roll
 
 
+
     def step(self, obv):
         updated_particles = np.zeros((6, self.num_of_particles))
 
@@ -34,6 +35,19 @@ class Particle_filter:
         for m in range(self.M):
             i = np.where(CDF >= r_0 + (m-1)/self.M, CDF, np.inf).argmin()
             updated_particles[:, m] = self.particles[:, i]
+
+        #RANDOMNESS
+        num_of_random = 0.1 * self.M
+
+        indices = np.random.randint(0, high=self.M-1, size=num_of_random) #Unique??
+
+        for i in indices:
+            updated_particles[0, i] = np.random.randint(self.boundaries[0], high=self.boundaries[1]) # x-row
+            updated_particles[2, i] = np.random.randint(self.boundaries[2], high=self.boundaries[3]) # z-row
+
+            updated_particles[3, i] = np.pi  # yaw
+            updated_particles[4, i] = 2 * np.pi * np.random.rand() # pitch
+            updated_particles[5, i] = np.pi * np.random.rand() - np.pi/2 # roll
 
         self.particles = updated_particles 
 
