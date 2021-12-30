@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from measurement_model import h
 #import sys
 #import glob
 #import time
@@ -43,8 +44,8 @@ def read_image():
     img = cv2.imread(image)
     mtx, dist, markerLength, arucoParams, arucoDict = aruco_params()
     z = aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict)
-    #cv2.imshow('Image', img) #REMOVE COMMENT TO SHOW IMAGE
-    #cv2.waitKey(0)
+    cv2.imshow('Image', img) #REMOVE COMMENT TO SHOW IMAGE
+    cv2.waitKey(0)
     return z
 
 
@@ -74,7 +75,23 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
 
         num_obs = tvec.shape[0]
 
-        z_t = np.zeros((12,num_obs))
+        W_1 = np.array([(0, 0, 4, 0, np.pi, 0)]) #Right marker (double_marker.png)
+        W_2 = np.array([(4, 0, 0, 0, np.pi/2, 0)]) #Left marker (double_marker.png)
+        W = np.concatenate((W_1.T, W_2.T), axis=1)
+        #print(W)
+
+        x_test = np.array([[-0.5, 0, -0.5, np.pi, -45/360 * 2 * np.pi, 0/360 * 2 * np.pi]]).T
+        
+        result = h(x_test, W, 1)
+
+        result = result.reshape((3,4))
+
+
+        rvec_test, _ = cv2.Rodrigues(result[:, :-1])
+        tvec_test = result[:, 2]
+        
+        cv2.aruco.drawAxis(img, mtx, dist, rvec_test, tvec_test, 1.0)
+
 
         for i in range(0,num_obs):
             cv2.aruco.drawAxis(img, mtx, dist, rvec[i], tvec[i], 1.0)
