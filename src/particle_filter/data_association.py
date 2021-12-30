@@ -29,7 +29,7 @@ def data_association(particles, W, z_t, Q):
 
 
             #Psi[:, :, i, m] = psi[:, :, i, max_index, m]
-            print('psi: ' + str(psi))
+            #print('psi: ' + str(psi))
             Psi = np.max(psi, axis=1)
 
     return Psi # num_obs x num_particles
