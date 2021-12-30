@@ -74,7 +74,7 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
         cv2.aruco.drawDetectedMarkers(img, corners)
 
         num_obs = tvec.shape[0]
-
+        z_t = np.zeros((12,num_obs))
         W_1 = np.array([(0, 0, 4, 0, np.pi, 0)]) #Right marker (double_marker.png)
         W_2 = np.array([(4, 0, 0, 0, np.pi/2, 0)]) #Left marker (double_marker.png)
         W = np.concatenate((W_1.T, W_2.T), axis=1)
@@ -82,7 +82,7 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
 
         x_test = np.array([[-0.5, 0, -0.5, np.pi, -45/360 * 2 * np.pi, 0/360 * 2 * np.pi]]).T
         
-        result = h(x_test, W, 1)
+        result = h(x_test[:, 0], W, 0)
 
         result = result.reshape((3,4))
 
