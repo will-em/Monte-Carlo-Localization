@@ -52,8 +52,9 @@ class Particle_filter:
         #RANDOMNESS
         num_of_random = int(self.random_ratio * self.num_of_particles)
         indices = np.random.randint(0, high=(self.num_of_particles - 1), size=num_of_random) #Unique??
-        print(np.mean(self.particles[0,:]))
-        print(np.mean(self.particles[2,:]))
+        #print(np.mean(self.particles[0,:]))
+        #print(np.mean(self.particles[2,:]))
+        #print(np.mean(self.particles[4,:]))
 
         for i in indices:
             updated_particles[0, i] = np.random.randint(self.boundaries[0]*2, high=self.boundaries[1]*2)/2 # x-row
@@ -78,6 +79,8 @@ class Particle_filter:
         plt.xlim([self.boundaries[0], self.boundaries[1]])
         plt.ylim([self.boundaries[2], self.boundaries[3]])
         plt.scatter(X, Z, alpha = 0.03)
+        plt.scatter(np.mean(self.particles[0,:]), np.mean(self.particles[2,:]))
+        #plt.scatter(np.mean(self.particles[2,:]))
 
 
         #ax = plt.axes(projection='3d')
