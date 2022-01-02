@@ -11,12 +11,18 @@ def data_association(particles, W, z_t, Q):
 
     psi = np.zeros((num_obs, num_landmarks, num_particles))
     Psi = np.zeros((num_obs, num_particles))
+    #nu_vec = np.zeros((12,num_obs*num_particles*num_landmarks))
+    #count = 0
     for i in range(num_obs):
         for m in range(num_particles):
             for k in range(num_landmarks):
                 z_hat = h(particles[:, m], W, k) #Maybe optimize
                 nu = z_t[:, i] - z_hat
                 psi[i, k, m] =  1 / (2 * np.pi * np.sqrt(det_Q)) * np.exp(- 1 / 2 * np.dot(nu.T, inv_Q).dot(nu))
+                #print(nu.reshape((3,4)))
+
+                #nu_vec[:,count] = nu
+                #count += 1
             ''''
             max_value = 0
             max_index = 0
@@ -30,6 +36,8 @@ def data_association(particles, W, z_t, Q):
 
             #Psi[:, :, i, m] = psi[:, :, i, max_index, m]
             #print('psi: ' + str(psi))
-            Psi = np.max(psi, axis=1)
-
+    #numax = np.min(abs(nu_vec), axis=1)
+    #print(numax)
+    Psi = np.max(psi, axis=1)
+    #print(Psi)
     return Psi # num_obs x num_particles

@@ -81,11 +81,13 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
     np.set_printoptions(suppress=True)
 
     if len(corners) > 0:
+        print('marker detected')
         rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(corners, markerLength, mtx, dist)
-        cv2.aruco.drawDetectedMarkers(img, corners)
+        #cv2.aruco.drawDetectedMarkers(img, corners)
 
         num_obs = tvec.shape[0]
         z_t = np.zeros((12,num_obs))
+        '''
         W_1 = np.array([(0, 0, 4, 0, np.pi, 0)]) #Right marker (double_marker.png)
         W_2 = np.array([(4, 0, 0, 0, np.pi/2, 0)]) #Left marker (double_marker.png)
         W = np.concatenate((W_1.T, W_2.T), axis=1)
@@ -102,21 +104,24 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
         tvec_test = result[:, 3]
 
         cv2.aruco.drawAxis(img, mtx, dist, rvec_test, tvec_test, 1.0)
+        '''
 
-
-        for i in range(0,num_obs):
-            cv2.aruco.drawAxis(img, mtx, dist, rvec[i], tvec[i], 1.0)
+        for i in range(num_obs):
+            #cv2.aruco.drawAxis(img, mtx, dist, rvec[i], tvec[i], 1.0)
 
             R, _ = cv2.Rodrigues(rvec[i])
             R = np.array(R)
 
             T_CM = np.concatenate((R,tvec[i].T), axis=1)
-            T_CM = np.matrix.flatten(T_CM)
+            T_CM = T_CM.flatten()#np.matrix.flatten(T_CM)
+            #print('T_CM ' + str(T_CM))
 
             z_t[:,i] = T_CM # Add T matrix to measurements
 
 
+
     else:
+        print('NO MARKER DETECTED')
         z_t = np.zeros((12,0))
 
     return z_t
