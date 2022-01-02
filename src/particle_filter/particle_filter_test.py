@@ -8,28 +8,21 @@ if __name__=="__main__":
     W_2 = np.array([(4, 0, 0, 0, -np.pi/2, 0)]) #left marker (double_marker.png)
     W = np.concatenate((W_1.T, W_2.T), axis=1)
 
-    Q = 10.0 * np.eye(12)
+    Q = 0.1 * np.eye(12)
     x_start = -5.0; x_end = 5.0; z_start = -5.0; z_end = 5.0
     boundaries = [x_start, x_end, z_start, z_end]
     #for i in range(10)
-    PF = Particle_filter(4000, W, Q, boundaries, 0.2)
+    PF = Particle_filter(500, W, Q, boundaries, 0.05)
     PF.plot()
 
-    video = cv2.VideoCapture('stand_still.mov')
-    i = 0
+    #video = cv2.VideoCapture('video_test.mov')
+
     while True:
-        i += 1
-        ret, img = video.read()
+        #ret, img = video.read()
 
-        if ret is False:
-            break
+        #if ret is False:
+        #    break
 
-        if i > 55:
-            z_t = read_image(img)
-            #cv2.imshow(img)
-
-            #cv2.imshow('Image', img) #REMOVE COMMENT TO SHOW IMAGE
-            #cv2.waitKey(1)
-            #z_t = test_image()
-            PF.step(z_t)
-            PF.plot()
+        z_t = test_image()
+        PF.step(z_t)
+        PF.plot()
