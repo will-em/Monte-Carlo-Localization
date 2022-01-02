@@ -1,7 +1,7 @@
-1 = NORTH
-2 = EAST
-3 = SOUTH
-4 = WEST
+1 = NORTH, YAW = np.pi 
+2 = EAST, YAW = np.pi / 2
+3 = SOUTH, YAW = 0
+4 = WEST, YAW = -np.pi / 2
 
 --Last element represent face orientation--
 
