@@ -83,7 +83,7 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
     if len(corners) > 0:
         print('marker detected')
         rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(corners, markerLength, mtx, dist)
-        cv2.aruco.drawDetectedMarkers(img, corners)
+        #cv2.aruco.drawDetectedMarkers(img, corners)
 
         num_obs = tvec.shape[0]
         z_t = np.zeros((12,num_obs))
@@ -106,8 +106,8 @@ def aruco_transform(img, mtx, dist, markerLength, arucoParams, arucoDict):
         cv2.aruco.drawAxis(img, mtx, dist, rvec_test, tvec_test, 1.0)
         '''
 
-        for i in range(0,num_obs):
-            cv2.aruco.drawAxis(img, mtx, dist, rvec[i], tvec[i], 1.0)
+        for i in range(num_obs):
+            #cv2.aruco.drawAxis(img, mtx, dist, rvec[i], tvec[i], 1.0)
 
             R, _ = cv2.Rodrigues(rvec[i])
             R = np.array(R)
