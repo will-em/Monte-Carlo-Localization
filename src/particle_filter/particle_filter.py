@@ -15,14 +15,20 @@ class Particle_filter:
         self.particles = np.zeros((6, self.num_of_particles))
         self.random_ratio = random_ratio
 
-        self.particles[0, :] = np.random.randint(self.boundaries[0]*2, high=self.boundaries[1]*2, size= num_of_particles)/2 # x-row
-        self.particles[2, :] = np.random.randint(self.boundaries[2]*2, high=self.boundaries[3]*2, size= num_of_particles)/2 # z-row
+        self.particles[0, :] = np.random.randint(self.boundaries[0], high=self.boundaries[1], size= num_of_particles) # x-row
+        self.particles[2, :] = np.random.randint(self.boundaries[2], high=self.boundaries[3], size= num_of_particles) # z-row
 
         self.particles[3, :] = np.pi * np.ones((1, num_of_particles)) # yaw
         self.particles[4, :] = 2 * np.pi * np.random.rand(num_of_particles) # pitch
         self.particles[5, :] = np.pi * np.random.rand(num_of_particles) - np.pi/2 # roll
         #fig = plt.figure()
         #self.ax = plt.axes(projection='3d')
+
+        self.X_mean = np.mean(self.particles[0,:])
+        self.Z_mean = np.mean(self.particles[2,:])
+
+        self.pitch_mean = np.mean(self.particles[4,:])
+        self.roll_mean = np.mean(self.particles[5,:])
 
 
 
@@ -49,16 +55,24 @@ class Particle_filter:
             i = np.where(CDF >= r_0 + (m-1)/self.M, CDF, np.inf).argmin()
             updated_particles[:, m] = self.particles[:, i]
 
+        #print(np.mean(self.particles[2,:]))
+        #print(np.mean(self.particles[4,:]))
+
+        #self.particles[1,:]
+        self.X_mean = np.mean(updated_particles[0,:])
+        self.Z_mean = np.mean(updated_particles[2,:])
+
+        self.pitch_mean = np.mean(updated_particles[4,:])
+        self.roll_mean = np.mean(updated_particles[5,:])
+
         #RANDOMNESS
         num_of_random = int(self.random_ratio * self.num_of_particles)
         indices = np.random.randint(0, high=(self.num_of_particles - 1), size=num_of_random) #Unique??
         #print(np.mean(self.particles[0,:]))
-        #print(np.mean(self.particles[2,:]))
-        #print(np.mean(self.particles[4,:]))
 
         for i in indices:
-            updated_particles[0, i] = np.random.randint(self.boundaries[0]*2, high=self.boundaries[1]*2)/2 # x-row
-            updated_particles[2, i] = np.random.randint(self.boundaries[2]*2, high=self.boundaries[3]*2)/2 # z-row
+            updated_particles[0, i] = np.random.randint(self.boundaries[0], high=self.boundaries[1]) # x-row
+            updated_particles[2, i] = np.random.randint(self.boundaries[2], high=self.boundaries[3]) # z-row
 
             updated_particles[3, i] = np.pi  # yaw
             updated_particles[4, i] = 2 * np.pi * np.random.rand() # pitch
@@ -68,8 +82,6 @@ class Particle_filter:
 
         self.particles[1,:] = 0.0
         self.particles[3,:] = np.pi
-
-        #self.particles[1,:]
 
 
     def plot(self):
