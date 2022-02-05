@@ -3,4 +3,6 @@ This project focuses on pose estimation in the game Minecraft using visual cues 
 
 ![45degrees](env_example.png)
 
-![](MCL2.gif)
+<p align="center">
+  <img src="MCL2.gif" alt="animated" />
+</p>
